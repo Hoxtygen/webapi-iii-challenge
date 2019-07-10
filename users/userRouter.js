@@ -1,5 +1,6 @@
 const express = require('express');
 const usersModel = require('./userDb.js');
+const postModel = require('../posts/postDb')
 const router = express.Router();
 
 
@@ -21,8 +22,22 @@ router.post('/', validateUser, async (req, res) => {
 });
 
 
-router.post('/:id/posts', (req, res) => {
-
+router.post('/:id/posts', validateUserId, validatePost, async(req, res) => {
+    const { text } = req.body;
+  const newPost = {
+    text,
+    user_id: req.user.id,
+  }
+  try {
+    const newPostId = await postModel.insert(newPost);
+    const newPostData = await postModel.getById(newPostId.id);
+    return res.status(201).json(newPostData);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: 'There was an error while saving the post to the database',
+    });
+  }
 });
 
 router.get('/', async (req, res) => {
