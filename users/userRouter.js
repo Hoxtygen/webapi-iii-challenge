@@ -109,7 +109,17 @@ function validateUser(req, res, next) {
 };
 
 function validatePost(req, res, next) {
-
+    if (!Object.keys(req.body).length) {
+        return res.status(400).send({
+          message: 'missing post data',
+        });
+      }
+      if (!req.body.text) {
+        return res.status(400).send({
+          message: 'missing required text field',
+        });
+      }
+      return next()
 };
 
 module.exports = router;
