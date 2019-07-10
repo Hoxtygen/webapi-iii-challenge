@@ -5,7 +5,19 @@ const router = express.Router();
 
 
 router.post('/', validateUser, async (req, res) => {
-    
+    const newUser = {
+        name: req.body.name
+    }
+    console.log(newUser)
+    try {
+        const  newUserId = await usersModel.insert(newUser);
+        const newUserData = await usersModel.getById(newUserId.id);
+        return res.status(201).json(newUserData);
+    } catch (error) {
+        return res.status(500).json({
+            error: 'There was an error while saving the user to the database',
+        })
+    }
 });
 
 
