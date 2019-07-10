@@ -95,8 +95,23 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', (req, res) => {
-
+router.put('/:id', validateUserId, validateUser, async(req, res) => {
+    const updatedUser = {
+        name: req.body.name
+      };
+      try {
+        const updateResponse = await usersModel.update(req.user.id, updatedUser);
+        if (updateResponse === 1) {
+          updatedUserData = await usersModel.getById(req.user.id);
+          return res.status(200).json(updatedUserData);
+        }
+        throw new Error;
+      } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+          error: 'There was an error while saving the user to the database',
+        });
+      }
 });
 
 //custom middleware
