@@ -53,14 +53,40 @@ router.delete('/:id', async(req, res) => {
    }
 });
 
-router.put('/:id', (req, res) => {
-
+/*router.put('/:id', async(req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { body } = req;
+    try {
+        const post = await Model.findById(id);
+        if (post) {
+            console.log(post)
+            if(!body.text || !body.user_id) {
+                return res.status(400).json({
+                    status: 400,
+                    errorMessage: "Please provide text and user_id for the post."
+                })
+            }
+            const updatedPost = await Model.update(id, body);
+            console.log(updatedPost)
+            return res.status(200).json(updatedPost)
+        } else {
+            return res.status(404).json({
+                status: 400,
+                message: "The post with the specified ID does not exist."
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: 500,
+            error: "The post could not be modified."
+        })
+    }
 });
-
+*/
 // custom middleware
 
 function validatePostId(req, res, next) {
-
+    
 };
 
 module.exports = router;

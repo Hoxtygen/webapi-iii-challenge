@@ -1,6 +1,8 @@
-const express = 'express';
-
+const express = require('express');
+const usersModel = require('./userDb.js');
 const router = express.Router();
+
+
 
 router.post('/', (req, res) => {
 
@@ -10,8 +12,15 @@ router.post('/:id/posts', (req, res) => {
 
 });
 
-router.get('/', (req, res) => {
-
+router.get('/', async(req, res) => {
+    try {
+        const users = await usersModel.get();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({
+            errorMessage: error
+        })
+    }
 });
 
 router.get('/:id', (req, res) => {
