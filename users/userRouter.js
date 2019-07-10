@@ -23,8 +23,24 @@ router.get('/', async(req, res) => {
     }
 });
 
-router.get('/:id', (req, res) => {
-
+router.get('/:id', async(req, res) => {
+    const id = parseInt(req.params.id, 10);
+    try {
+        const user = await usersModel.getById(id);
+        if (user) {
+            return res.status(200).json({
+                user
+            });
+        } else {
+            return res.status(404).json({
+                message: "The user with the specified ID does not exist."
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            errorMessage: error
+        })
+    }
 });
 
 router.get('/:id/posts', (req, res) => {
