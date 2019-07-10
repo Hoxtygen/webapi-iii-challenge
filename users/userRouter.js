@@ -55,8 +55,24 @@ router.get('/:id', validateUserId, async (req, res) => {
     res.status(200).send(req.user);
 });
 
-router.get('/:id/posts', (req, res) => {
-
+router.get('/:id/posts', validateUserId, async(req, res) => {
+    try {
+        const getPost = await usersModel.getUserPosts(req.user.id);
+        //console.log(getPost)
+        if (getPost.length) {
+            return res.status(200).json({
+                getPost
+            })
+        }
+        return res.status(200).json({
+            message: 'The user has no post to display'
+        })
+    } catch (error) {
+        return res.status(500).json({
+            error: 'There was an error while getting the posts from the database',
+          });
+      
+    }
 });
 
 router.delete('/:id', async (req, res) => {
