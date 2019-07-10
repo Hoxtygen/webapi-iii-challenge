@@ -4,28 +4,10 @@ const router = express.Router();
 
 
 
-router.post('/', async (req, res) => {
-    try {
-        const { name } = req.body;
-        const newUser = name
-        if (!name) {
-            return res.status(400).json({
-                status: 400,
-                errorMessage: "Please provide a name for  the user."
-            })
-        }
-        const validUser = await usersModel.insert(newUser);
-        const newUserData = await usersModel.findById(validUser.id)
-        res.status(201).json({
-            newUserData
-        })
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            error: "There was an error while saving the user to the database"
-        })
-    }
+router.post('/', validateUser, async (req, res) => {
+    
 });
+
 
 router.post('/:id/posts', (req, res) => {
 
@@ -100,6 +82,17 @@ async function validateUserId(req, res, next) {
 };
 
 function validateUser(req, res, next) {
+    if (!Object.keys(req.body).length) {
+        return res.status(400).json({
+            message: 'missing user data'
+        })
+    }
+    if (!req.body.name) {
+        return res.status(400).send({
+          message: 'missing required name field',
+        });
+      }
+      return next()
 
 };
 

@@ -5,6 +5,7 @@ const userRouter = require('./users/userRouter.js')
 
 
 server.use(logger)
+server.use(express.json())
 server.use('/api/posts', postRouter)
 server.use('/api/users/', userRouter);
 
