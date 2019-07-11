@@ -15,31 +15,13 @@ router.get('/', async(req, res) => {
 
 router.get('/:id', validatePostId, async(req, res) => {
     return res.status(200).json(req.post)
-  /*  const id = parseInt(req.params.id, 10);
-    try {
-        const post = await Model.getById(id);
-        if (post) {
-            return res.status(200).json({
-                post
-            });
-        } else {
-            return res.status(404).json({
-                message: "The post with the specified ID does not exist."
-            })
-        }
-    } catch (error) {
-        res.status(500).json({
-            errorMessage: error
-        })
-    }
-    */
 });
 
-router.delete('/:id', async(req, res) => {
-   const id = parseInt(req.params.id, 10);
+router.delete('/:id', validatePostId, async(req, res) => {
    try {
-       const post = await Model.remove(id);
-       if (post) {
+       const post = await Model.remove(req.post);
+       if (req.post) {
+           console.log(post)
         return res.status(200).json({
             message: 'post successfully deleted'
         });
@@ -88,7 +70,7 @@ router.delete('/:id', async(req, res) => {
 // custom middleware
 
 async function validatePostId(req, res, next) {
-    const id = parseInt(req.params.id, 10);
+    const id = req.params.id;
     if (Number.isNaN(id) || id % 1 !== 0 || id < 0) {
         return res.status(400).json({
             message: 'Invalid id supplied'
