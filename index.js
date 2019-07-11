@@ -1,7 +1,8 @@
 // code away!
 const server = require('./server.js');
+const port = process.env.PORT || 4002;
 
-server.listen(4002, () => {
-    console.log('\n* Server Running on http://localhost:4002 *\n');
+server.listen(port, () => {
+    console.log(`* Server Running port ${port}`);
   });
   

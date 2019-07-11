@@ -17,7 +17,7 @@ server.get('/', (req, res) => {
 
 function logger(req, res, next) {
   const date = new Date()
-   console.log(req.method, req.url, date.toUTCString());
+   console.log(req.method, req.url, date.toTimeString());
    next()
 };
 

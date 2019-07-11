@@ -13,8 +13,9 @@ router.get('/', async(req, res) => {
     }
 });
 
-router.get('/:id', async(req, res) => {
-    const id = parseInt(req.params.id, 10);
+router.get('/:id', validatePostId, async(req, res) => {
+    return res.status(200).json(req.post)
+  /*  const id = parseInt(req.params.id, 10);
     try {
         const post = await Model.getById(id);
         if (post) {
@@ -31,6 +32,7 @@ router.get('/:id', async(req, res) => {
             errorMessage: error
         })
     }
+    */
 });
 
 router.delete('/:id', async(req, res) => {
@@ -85,8 +87,27 @@ router.delete('/:id', async(req, res) => {
 */
 // custom middleware
 
-function validatePostId(req, res, next) {
-    
+async function validatePostId(req, res, next) {
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id) || id % 1 !== 0 || id < 0) {
+        return res.status(400).json({
+            message: 'Invalid id supplied'
+        })
+    }
+    try {
+        const post = await Model.getById(id);
+        if (!post) {
+            return res.status(404).json({
+                errorMessage: 'The post with the specified ID does not exist'
+            })
+        }
+        req.post = post;
+    } catch (error) {
+        return res.status(500).json({
+            error
+        })
+    }
+    return next()
 };
 
 module.exports = router;
